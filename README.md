@@ -4,6 +4,8 @@ A simple Swift logger to provide timestamp, filename, line number, and function 
 Example:
 
 ```
+import Foundation
+
 class myClass {
     private let loggerManager = LoggerManager()
     
@@ -22,7 +24,7 @@ class myClass {
 Log output:
 
 ```
-info  : 2018-03-25 12:29:40.7290 : ViewModel.swift:56:someMethod() : example info message
-error : 2018-03-25 12:29:40.7291 : ViewModel.swift:57:someMethod() : example error message
-info  : 2018-03-25 12:29:40.7292 : ViewModel.swift:58:someMethod() : example info message
+info  : 2018-03-25 12:29:40.7290 : myClass.swift:11:someMethod() : example info message
+error : 2018-03-25 12:29:40.7291 : myClass.swift:12:someMethod() : example error message
+info  : 2018-03-25 12:29:40.7292 : myClass.swift:13:someMethod() : example info message
 ```
