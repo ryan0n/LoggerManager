@@ -37,6 +37,19 @@ class LoggerManager {
             )
         )
     }
+    
+    public func warning(_ message: String = "", file: String = #file, line: Int = #line, function: String = #function) {
+        handleLogEntry(
+            LogEntry(
+                created:  Date(),
+                type:     .warning,
+                message:  message,
+                file:     file,
+                line:     line,
+                function: function
+            )
+        )
+    }    
 }
 
 struct LogEntry {
