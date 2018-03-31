@@ -4,6 +4,7 @@ class LoggerManager {
     // MARK:- Properties
     private var logLevel: LogLevel
     
+    // MARK:- Initializer
     init(withLogLevel: LogLevel = .debug ) {
         logLevel = withLogLevel
     }
@@ -11,51 +12,25 @@ class LoggerManager {
     // MARK:- Private methods
     private func log(_ message: LogMessage) {
         if message.level.rawValue >= logLevel.rawValue  {
-            print("\(message.stringValue)\n")
+            print("\(message.stringValue)")
         }
     }
     
     // MARK:- Public methods
-    public func debug(_ message: String = "", file: String = #file, line: Int = #line, function: String = #function) {
-        log(LogMessage(created:  Date(), level: .debug, message: message, file: file, line: line, function: function))
+    public func debug(_ message: String = "", context: LogContext = LogContext()) {
+        log(LogMessage(level: .debug, message: message, context: context))
     }
 
-    public func info(_ message: String = "", file: String = #file, line: Int = #line, function: String = #function) {
-        log(LogMessage(created:  Date(), level: .info, message: message, file: file, line: line, function: function))
+    public func info(_ message: String = "", context: LogContext = LogContext()) {
+        log(LogMessage(level: .info, message: message, context: context))
     }
     
-    public func warning(_ message: String = "", file: String = #file, line: Int = #line, function: String = #function) {
-        log(LogMessage(created:  Date(), level: .warning, message: message, file: file, line: line, function: function))
+    public func warning(_ message: String = "", context: LogContext = LogContext()) {
+        log(LogMessage(level: .warning, message: message, context: context))
     }
 
-    public func error(_ message: String = "", file: String = #file, line: Int = #line, function: String = #function) {
-        log(LogMessage(created:  Date(), level: .error, message: message, file: file, line: line, function: function))
-    }
-}
-
-struct LogMessage {
-    let created: Date
-    let level: LogLevel
-    let message: String
-    let file: String
-    let line: Int
-    let function: String
-    var dateString: String {
-        get {
-            let formatter = DateFormatter()
-            formatter.timeZone = TimeZone.current
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSS"
-            return formatter.string(from: created)
-        }
-    }
-    var stringValue: String {
-        get {
-            let fileUrl = URL(fileURLWithPath: file)
-            return "\(level)" +
-                " : \(dateString)" +
-                " : \(fileUrl.lastPathComponent):\(line):\(function)" +
-                " : \(message)"
-        }
+    public func error(_ message: String = "", context: LogContext = LogContext()) {
+        log(LogMessage(level: .error, message: message, context: context))
     }
 }
 
@@ -66,6 +41,39 @@ enum LogLevel: Int {
     case debug   = 0
 }
 
+struct LogMessage {
+    let created: Date = Date()
+    let level: LogLevel
+    let message: String
+    let context: LogContext
+    var dateString: String {
+        get {
+            let formatter = DateFormatter()
+            formatter.timeZone = TimeZone.current
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSS"
+            return formatter.string(from: created)
+        }
+    }
+    var stringValue: String {
+        get {
+            return "\(level)" +
+                " : \(dateString)" +
+                " : \(URL(fileURLWithPath: context.file).lastPathComponent)" +
+                " : \(context.line)" +
+                " : \(context.function)" +
+                " : \(message)"
+        }
+    }
+}
 
-
-
+struct LogContext {
+    public var file: String
+    public var line: Int
+    public var function: String
+    
+    init(file: String = #file, line: Int = #line, function: String = #function) {
+        self.file = file
+        self.line = line
+        self.function = function
+    }
+}
