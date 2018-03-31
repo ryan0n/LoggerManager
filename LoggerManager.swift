@@ -2,59 +2,40 @@ import Foundation
 
 class LoggerManager {
     // MARK:- Properties
-    private var outputEnabled = true
+    private var logLevel: LogLevel
+    
+    init(withLogLevel: LogLevel = .debug ) {
+        logLevel = withLogLevel
+    }
     
     // MARK:- Private methods
-    private func handleLogEntry(_ withLogEntry: LogEntry) {
-        if outputEnabled {
-            print("\(withLogEntry.stringValue)\n")
+    private func log(_ message: LogMessage) {
+        if message.level.rawValue >= logLevel.rawValue  {
+            print("\(message.stringValue)\n")
         }
     }
     
     // MARK:- Public methods
-    public func info(_ message: String = "", file: String = #file, line: Int = #line, function: String = #function) {
-        handleLogEntry(
-            LogEntry(
-                created:  Date(),
-                type:     .info,
-                message:  message,
-                file:     file,
-                line:     line,
-                function: function
-            )
-        )
+    public func debug(_ message: String = "", file: String = #file, line: Int = #line, function: String = #function) {
+        log(LogMessage(created:  Date(), level: .debug, message: message, file: file, line: line, function: function))
     }
-    
-    public func error(_ message: String = "", file: String = #file, line: Int = #line, function: String = #function) {
-        handleLogEntry(
-            LogEntry(
-                created:  Date(),
-                type:     .error,
-                message:  message,
-                file:     file,
-                line:     line,
-                function: function
-            )
-        )
+
+    public func info(_ message: String = "", file: String = #file, line: Int = #line, function: String = #function) {
+        log(LogMessage(created:  Date(), level: .info, message: message, file: file, line: line, function: function))
     }
     
     public func warning(_ message: String = "", file: String = #file, line: Int = #line, function: String = #function) {
-        handleLogEntry(
-            LogEntry(
-                created:  Date(),
-                type:     .warning,
-                message:  message,
-                file:     file,
-                line:     line,
-                function: function
-            )
-        )
-    }    
+        log(LogMessage(created:  Date(), level: .warning, message: message, file: file, line: line, function: function))
+    }
+
+    public func error(_ message: String = "", file: String = #file, line: Int = #line, function: String = #function) {
+        log(LogMessage(created:  Date(), level: .error, message: message, file: file, line: line, function: function))
+    }
 }
 
-struct LogEntry {
+struct LogMessage {
     let created: Date
-    let type: LogType
+    let level: LogLevel
     let message: String
     let file: String
     let line: Int
@@ -70,7 +51,7 @@ struct LogEntry {
     var stringValue: String {
         get {
             let fileUrl = URL(fileURLWithPath: file)
-            return "\(type)" +
+            return "\(level)" +
                 " : \(dateString)" +
                 " : \(fileUrl.lastPathComponent):\(line):\(function)" +
                 " : \(message)"
@@ -78,9 +59,13 @@ struct LogEntry {
     }
 }
 
-enum LogType {
-    case info
-    case warning
-    case error
+enum LogLevel: Int {
+    case error   = 3
+    case warning = 2
+    case info    = 1
+    case debug   = 0
 }
+
+
+
 
