@@ -25,8 +25,8 @@ class myClass {
 Log output:
 
 ```
-info    : 2018-03-25 12:29:40.7290 : myClass.swift:11:someMethod() : example info message
-error   : 2018-03-25 12:29:40.7291 : myClass.swift:12:someMethod() : example error message
-warning : 2018-03-25 12:29:40.7292 : myClass.swift:13:someMethod() : example warning message
-info    : 2018-03-25 12:29:40.7293 : myClass.swift:14:someMethod() : example info message
+info    : 2018-03-25 12:29:40.7290 : myClass.swift : 11 : someMethod() : example info message
+error   : 2018-03-25 12:29:40.7291 : myClass.swift : 12 : someMethod() : example error message
+warning : 2018-03-25 12:29:40.7292 : myClass.swift : 13 : someMethod() : example warning message
+info    : 2018-03-25 12:29:40.7293 : myClass.swift : 14 : someMethod() : example info message
 ```
